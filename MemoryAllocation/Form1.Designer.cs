@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.holeSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startingAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,6 +46,7 @@
             this.startB = new System.Windows.Forms.Button();
             this.processB = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.processdelT = new System.Windows.Forms.Button();
             this.proSizeT = new System.Windows.Forms.TextBox();
             this.proNameT = new System.Windows.Forms.TextBox();
             this.noOfProT = new System.Windows.Forms.TextBox();
@@ -57,12 +61,14 @@
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -71,7 +77,7 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.holeSize,
             this.startingAddress});
-            this.dataGridView1.Location = new System.Drawing.Point(261, 19);
+            this.dataGridView1.Location = new System.Drawing.Point(231, 19);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(243, 283);
             this.dataGridView1.TabIndex = 0;
@@ -92,7 +98,7 @@
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.name,
             this.size});
-            this.dataGridView2.Location = new System.Drawing.Point(261, 19);
+            this.dataGridView2.Location = new System.Drawing.Point(223, 19);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(243, 283);
             this.dataGridView2.TabIndex = 1;
@@ -117,21 +123,21 @@
             this.groupBox1.Controls.Add(this.dataGridView1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(510, 316);
+            this.groupBox1.Size = new System.Drawing.Size(480, 316);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Add Holes";
             // 
             // holeStartT
             // 
-            this.holeStartT.Location = new System.Drawing.Point(135, 184);
+            this.holeStartT.Location = new System.Drawing.Point(121, 184);
             this.holeStartT.Name = "holeStartT";
             this.holeStartT.Size = new System.Drawing.Size(100, 20);
             this.holeStartT.TabIndex = 6;
             // 
             // holeSizeT
             // 
-            this.holeSizeT.Location = new System.Drawing.Point(135, 150);
+            this.holeSizeT.Location = new System.Drawing.Point(121, 150);
             this.holeSizeT.Name = "holeSizeT";
             this.holeSizeT.Size = new System.Drawing.Size(100, 20);
             this.holeSizeT.TabIndex = 5;
@@ -150,7 +156,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 187);
+            this.label3.Location = new System.Drawing.Point(6, 187);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(91, 13);
             this.label3.TabIndex = 3;
@@ -159,7 +165,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 154);
+            this.label2.Location = new System.Drawing.Point(6, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(30, 13);
             this.label2.TabIndex = 2;
@@ -168,7 +174,7 @@
             // startB
             // 
             this.startB.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.startB.Location = new System.Drawing.Point(46, 177);
+            this.startB.Location = new System.Drawing.Point(166, 74);
             this.startB.Name = "startB";
             this.startB.Size = new System.Drawing.Size(108, 47);
             this.startB.TabIndex = 8;
@@ -179,7 +185,7 @@
             // processB
             // 
             this.processB.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.processB.Location = new System.Drawing.Point(71, 255);
+            this.processB.Location = new System.Drawing.Point(54, 136);
             this.processB.Name = "processB";
             this.processB.Size = new System.Drawing.Size(108, 47);
             this.processB.TabIndex = 7;
@@ -189,6 +195,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.processdelT);
             this.groupBox2.Controls.Add(this.processB);
             this.groupBox2.Controls.Add(this.proSizeT);
             this.groupBox2.Controls.Add(this.proNameT);
@@ -197,30 +204,41 @@
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.dataGridView2);
-            this.groupBox2.Location = new System.Drawing.Point(528, 12);
+            this.groupBox2.Location = new System.Drawing.Point(498, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(510, 316);
+            this.groupBox2.Size = new System.Drawing.Size(472, 316);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Add Process";
             // 
+            // processdelT
+            // 
+            this.processdelT.Font = new System.Drawing.Font("Tahoma", 9F);
+            this.processdelT.Location = new System.Drawing.Point(54, 218);
+            this.processdelT.Name = "processdelT";
+            this.processdelT.Size = new System.Drawing.Size(108, 47);
+            this.processdelT.TabIndex = 2;
+            this.processdelT.Text = "Delete Selected";
+            this.processdelT.UseVisualStyleBackColor = true;
+            this.processdelT.Click += new System.EventHandler(this.processdelT_Click);
+            // 
             // proSizeT
             // 
-            this.proSizeT.Location = new System.Drawing.Point(145, 184);
+            this.proSizeT.Location = new System.Drawing.Point(114, 84);
             this.proSizeT.Name = "proSizeT";
             this.proSizeT.Size = new System.Drawing.Size(100, 20);
             this.proSizeT.TabIndex = 12;
             // 
             // proNameT
             // 
-            this.proNameT.Location = new System.Drawing.Point(145, 147);
+            this.proNameT.Location = new System.Drawing.Point(114, 47);
             this.proNameT.Name = "proNameT";
             this.proNameT.Size = new System.Drawing.Size(100, 20);
             this.proNameT.TabIndex = 11;
             // 
             // noOfProT
             // 
-            this.noOfProT.Location = new System.Drawing.Point(145, 116);
+            this.noOfProT.Location = new System.Drawing.Point(114, 16);
             this.noOfProT.Name = "noOfProT";
             this.noOfProT.Size = new System.Drawing.Size(100, 20);
             this.noOfProT.TabIndex = 10;
@@ -228,7 +246,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(37, 187);
+            this.label4.Location = new System.Drawing.Point(6, 87);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(30, 13);
             this.label4.TabIndex = 9;
@@ -237,7 +255,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(37, 154);
+            this.label5.Location = new System.Drawing.Point(6, 54);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 8;
@@ -247,7 +265,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 119);
+            this.label6.Location = new System.Drawing.Point(6, 19);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(91, 13);
             this.label6.TabIndex = 7;
@@ -259,9 +277,9 @@
             this.groupBox3.Controls.Add(this.startB);
             this.groupBox3.Controls.Add(this.bestfit);
             this.groupBox3.Controls.Add(this.firstfit);
-            this.groupBox3.Location = new System.Drawing.Point(1054, 12);
+            this.groupBox3.Location = new System.Drawing.Point(976, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(211, 316);
+            this.groupBox3.Size = new System.Drawing.Size(289, 153);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Method";
@@ -269,7 +287,7 @@
             // restB
             // 
             this.restB.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.restB.Location = new System.Drawing.Point(46, 255);
+            this.restB.Location = new System.Drawing.Point(25, 74);
             this.restB.Name = "restB";
             this.restB.Size = new System.Drawing.Size(108, 47);
             this.restB.TabIndex = 8;
@@ -281,7 +299,7 @@
             // 
             this.bestfit.AutoSize = true;
             this.bestfit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bestfit.Location = new System.Drawing.Point(58, 96);
+            this.bestfit.Location = new System.Drawing.Point(179, 41);
             this.bestfit.Name = "bestfit";
             this.bestfit.Size = new System.Drawing.Size(66, 18);
             this.bestfit.TabIndex = 3;
@@ -293,7 +311,7 @@
             // 
             this.firstfit.AutoSize = true;
             this.firstfit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.firstfit.Location = new System.Drawing.Point(58, 56);
+            this.firstfit.Location = new System.Drawing.Point(37, 41);
             this.firstfit.Name = "firstfit";
             this.firstfit.Size = new System.Drawing.Size(64, 18);
             this.firstfit.TabIndex = 1;
@@ -308,9 +326,9 @@
             this.Column1,
             this.Column2,
             this.Column3});
-            this.dataGridView3.Location = new System.Drawing.Point(276, 348);
+            this.dataGridView3.Location = new System.Drawing.Point(12, 334);
             this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.Size = new System.Drawing.Size(343, 282);
+            this.dataGridView3.Size = new System.Drawing.Size(343, 307);
             this.dataGridView3.TabIndex = 3;
             // 
             // Column1
@@ -328,11 +346,30 @@
             this.Column3.HeaderText = "Address";
             this.Column3.Name = "Column3";
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(381, 334);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.YValuesPerPoint = 2;
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(884, 300);
+            this.chart1.TabIndex = 4;
+            this.chart1.Text = "chart1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1277, 653);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -348,6 +385,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -383,6 +421,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.Button processdelT;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }
 

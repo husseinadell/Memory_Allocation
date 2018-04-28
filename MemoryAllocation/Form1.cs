@@ -16,6 +16,7 @@ namespace MemoryAllocation
         public List<MemoryItem> holes = new List<MemoryItem>();
         public List<MemoryItem> processes = new List<MemoryItem>();
         public List<MemoryItem> ram = new List<MemoryItem>();
+        public List<MemoryItem> oldRam = new List<MemoryItem>();
         public Form1()
         {
             InitializeComponent();
@@ -135,6 +136,7 @@ namespace MemoryAllocation
             noOfProT.Enabled = true;
             holes.Clear();
             processes.Clear();
+            ram.Clear();
             dataGridView1.Rows.Clear();
             dataGridView1.Refresh();
             dataGridView2.Rows.Clear();
@@ -167,9 +169,11 @@ namespace MemoryAllocation
         {
             dataGridView2.Refresh();
             dataGridView3.Rows.Clear();
-            List<MemoryItem> sortedHoles = new List<MemoryItem>(holes);
-            List<MemoryItem> tempProcesses = new List<MemoryItem>(processes);
-            sortedHoles = sortedHoles.OrderBy(a => a.starting_date).ToList();
+            ram.Clear();
+            List<MemoryItem> sortedHoles = holes.Select(an => new MemoryItem {name = an.name,size = an.size,starting_date = an.starting_date }).ToList();
+            List<MemoryItem> tempProcesses = processes.Select(i => new MemoryItem {name = i.name,size=i.size, }).ToList();
+            
+                sortedHoles = sortedHoles.OrderBy(a => a.starting_date).ToList();
            // int count = 0;
             
             for (int j = 0; j < sortedHoles.Count; j++)
@@ -201,6 +205,25 @@ namespace MemoryAllocation
                 ram.Add(sortedHoles[j]);
             }
             ram = ram.OrderBy(a => a.starting_date).ToList();
+            for (int i = 0; i < ram.Count -1; i++)
+            {
+                if ((ram[i].size == ram[i + 1].size) && (ram[i].starting_date == ram[i].starting_date))
+                    ram.RemoveAt(i + 1);
+            }
+            chart1.Series.Clear();
+            chart1.Series.Add("h");
+            chart1.Series["h"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+            chart1.Series["h"].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
+            for (int i = 0; i < processes.Count; i++)
+            {
+                chart1.Series.Add(processes[i].name);
+                chart1.Series[processes[i].name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+                chart1.Series[processes[i].name].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
+            }
+            for (int i = 0; i < ram.Count; i++)
+            {
+                chart1.Series[ram[i].name].Points.AddXY(ram[i].name, ram[i].starting_date + ram[i].size, ram[i].starting_date);
+            }
             DataTable gg = new DataTable();
             gg.Columns.Add("Name");
             gg.Columns.Add("size");
@@ -227,8 +250,9 @@ namespace MemoryAllocation
         {
             dataGridView2.Refresh();
             dataGridView3.Rows.Clear();
-            List<MemoryItem> sortedHoles = new List<MemoryItem>(holes);
-            List<MemoryItem> tempProcesses = new List<MemoryItem>(processes);
+            ram.Clear();
+            List<MemoryItem> sortedHoles = holes.Select(an => new MemoryItem { name = an.name, size = an.size, starting_date = an.starting_date }).ToList();
+            List<MemoryItem> tempProcesses = processes.Select(i => new MemoryItem { name = i.name, size = i.size, }).ToList();
             sortedHoles = sortedHoles.OrderBy(a => a.starting_date).ToList();
             for (int i = 0; i < tempProcesses.Count; i++)
             {
@@ -251,7 +275,7 @@ namespace MemoryAllocation
                         }
                     }
                 }
-                MessageBox.Show(bestfitIndex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(bestfitIndex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (bestfitIndex != -1)
                 {
                     sortedHoles[bestfitIndex].size -= tempProcesses[i].size;
@@ -276,6 +300,20 @@ namespace MemoryAllocation
                 ram.Add(sortedHoles[j]);
             }
             ram = ram.OrderBy(a => a.starting_date).ToList();
+            chart1.Series.Clear();
+            chart1.Series.Add("h");
+            chart1.Series["h"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+            chart1.Series["h"].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
+            for (int i = 0; i < processes.Count; i++)
+            {
+                chart1.Series.Add(processes[i].name);
+                chart1.Series[processes[i].name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+                chart1.Series[processes[i].name].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
+            }
+            for (int i = 0; i < ram.Count; i++)
+            {
+                chart1.Series[ram[i].name].Points.AddXY(ram[i].name, ram[i].starting_date + ram[i].size, ram[i].starting_date);
+            }
             DataTable gg = new DataTable();
             gg.Columns.Add("Name");
             gg.Columns.Add("size");
@@ -296,11 +334,103 @@ namespace MemoryAllocation
                 dataGridView3.Rows[num].Cells[2].Value = Drow["Address"].ToString();
             }
         }
+
+        private void processdelT_Click(object sender, EventArgs e)
+        {
+            int rowIndex = dataGridView2.CurrentCell.RowIndex;
+            dataGridView2.Rows.RemoveAt(rowIndex);
+            int target = -1;
+            if (ram.Count == 0)
+            {
+                processes.RemoveAt(rowIndex);
+            }
+            else
+            {
+                for (int i = 0; i < ram.Count; i++)
+                {
+                    if (processes[rowIndex].name == ram[i].name)
+                    {
+                        target = i;
+                        break;
+                    }
+                }
+            }
+            MemoryItem removed = ram[target];
+            int end_address = ram[target].size + ram[target].starting_date;
+            if (target == 0)
+            {
+                if (end_address == ram[target + 1].starting_date)
+                {
+                    ram[target + 1].size += ram[target].size;
+                    ram[target + 1].starting_date = ram[target].starting_date;
+                    ram.RemoveAt(target);
+                }
+                else
+                {
+                    ram[target].name = "h";
+                }
+            }
+            else if (target == (ram.Count - 1))
+            {
+                if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                {
+                    ram[target - 1].size += ram[target].size;
+                    ram.RemoveAt(target);
+                }
+                else
+                {
+                    ram[target].name = "h";
+                }
+            }
+            else
+            {
+                int flag = 0;
+                if (end_address == ram[target + 1].starting_date)
+                {
+                    ram[target + 1].size += ram[target].size;
+                    ram[target + 1].starting_date = ram[target].starting_date;
+                    //ram.RemoveAt(target);
+                    flag = 1;
+                }
+                if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                {
+                    ram[target - 1].size += ram[target].size;
+                    //ram.RemoveAt(target);
+                    flag = 1;
+                }
+                else
+                {
+                    ram[target].name = "h";
+                }
+                if(flag == 1)
+                    ram.RemoveAt(target);
+            }
+            holes.Clear();
+            for (int i = 0; i < ram.Count; i++)
+            {
+                if (ram[i].name == "h")
+                    holes.Add(ram[i]);
+            }
+            for (int i = 0; i < ram.Count; i++)
+            {
+                MessageBox.Show(ram[i].size.ToString(), ram[i].name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
     public class MemoryItem
     {
+
         public string name, type;
         public int size, starting_date;
+        public MemoryItem()
+        { }
+        public MemoryItem(MemoryItem x)
+        {
+            this.name = x.name;
+            this.size = x.size;
+            this.starting_date = x.starting_date;
+            this.type = x.type;
+        }
         public MemoryItem( string t, int s, int sa)
         {
             name = t;
@@ -320,6 +450,7 @@ namespace MemoryAllocation
             name = n;
             type = t;
             size = s;
+            starting_date = -1;
         }
     };
 }
