@@ -1,0 +1,9 @@
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\bin\Debug\MemoryAllocation.exe.config
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\bin\Debug\MemoryAllocation.exe
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\bin\Debug\MemoryAllocation.pdb
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.csprojResolveAssemblyReference.cache
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.Form1.resources
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.Properties.Resources.resources
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.csproj.GenerateResource.Cache
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.exe
+F:\3RD computer\Operating System\MemoryAllocation\MemoryAllocation\obj\Debug\MemoryAllocation.pdb
