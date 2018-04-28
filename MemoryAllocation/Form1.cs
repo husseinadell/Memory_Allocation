@@ -17,10 +17,10 @@ namespace MemoryAllocation
         public List<MemoryItem> processes = new List<MemoryItem>();
         public List<MemoryItem> ram = new List<MemoryItem>();
         public List<MemoryItem> oldRam = new List<MemoryItem>();
+        int flag1 = 0;
         public Form1()
         {
             InitializeComponent();
-            int flag = 0;
         }
 
         private void label5_Click(object sender, EventArgs e)
@@ -143,6 +143,7 @@ namespace MemoryAllocation
             dataGridView2.Refresh();
             dataGridView3.Rows.Clear();
             dataGridView3.Refresh();
+            chart1.Series.Clear();
             noOfProT.Text = "";
             proNameT.Text = "";
             proSizeT.Text = "";
@@ -159,6 +160,14 @@ namespace MemoryAllocation
             else if (bestfit.Checked)
             {
                 best_fit_allocation();
+                /*if (flag == 0)
+                {
+                    best_fit_allocation();
+                }
+                else
+                {
+                    Update_best_fit();
+                }*/
             }
             else
             {
@@ -222,7 +231,7 @@ namespace MemoryAllocation
             }
             for (int i = 0; i < ram.Count; i++)
             {
-                chart1.Series[ram[i].name].Points.AddXY(ram[i].name, ram[i].starting_date + ram[i].size, ram[i].starting_date);
+                chart1.Series[ram[i].name].Points.AddXY(5, ram[i].starting_date + ram[i].size, ram[i].starting_date);
             }
             DataTable gg = new DataTable();
             gg.Columns.Add("Name");
@@ -312,7 +321,7 @@ namespace MemoryAllocation
             }
             for (int i = 0; i < ram.Count; i++)
             {
-                chart1.Series[ram[i].name].Points.AddXY(ram[i].name, ram[i].starting_date + ram[i].size, ram[i].starting_date);
+                chart1.Series[ram[i].name].Points.AddXY(5, ram[i].starting_date + ram[i].size, ram[i].starting_date);
             }
             DataTable gg = new DataTable();
             gg.Columns.Add("Name");
@@ -334,10 +343,11 @@ namespace MemoryAllocation
                 dataGridView3.Rows[num].Cells[2].Value = Drow["Address"].ToString();
             }
         }
-
+        
         private void processdelT_Click(object sender, EventArgs e)
         {
             int rowIndex = dataGridView2.CurrentCell.RowIndex;
+            string name = dataGridView2.Rows[rowIndex].Cells[0].Value.ToString();
             dataGridView2.Rows.RemoveAt(rowIndex);
             int target = -1;
             if (ram.Count == 0)
@@ -346,74 +356,108 @@ namespace MemoryAllocation
             }
             else
             {
+                flag1 = 1;
                 for (int i = 0; i < ram.Count; i++)
                 {
-                    if (processes[rowIndex].name == ram[i].name)
+                    if (name == ram[i].name)
                     {
                         target = i;
                         break;
                     }
                 }
-            }
-            MemoryItem removed = ram[target];
-            int end_address = ram[target].size + ram[target].starting_date;
-            if (target == 0)
-            {
-                if (end_address == ram[target + 1].starting_date)
+                for (int i = 0; i < processes.Count; i++)
                 {
-                    ram[target + 1].size += ram[target].size;
-                    ram[target + 1].starting_date = ram[target].starting_date;
-                    ram.RemoveAt(target);
+                    if (name == processes[i].name)
+                    {
+                        processes.RemoveAt(i);
+                        break;
+                    }
+                }
+                MemoryItem removed = ram[target];
+                int end_address = ram[target].size + ram[target].starting_date;
+                if (target == 0)
+                {
+                    if (end_address == ram[target + 1].starting_date)
+                    {
+                        ram[target + 1].size += ram[target].size;
+                        ram[target + 1].starting_date = ram[target].starting_date;
+                        ram.RemoveAt(target);
+                    }
+                    else
+                    {
+                        ram[target].name = "h";
+                    }
+                }
+                else if (target == (ram.Count - 1))
+                {
+                    if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                    {
+                        ram[target - 1].size += ram[target].size;
+                        ram.RemoveAt(target);
+                    }
+                    else
+                    {
+                        ram[target].name = "h";
+                    }
                 }
                 else
                 {
-                    ram[target].name = "h";
+                    int flag = 0;
+                    if (end_address == ram[target + 1].starting_date)
+                    {
+                        ram[target + 1].size += ram[target].size;
+                        ram[target + 1].starting_date = ram[target].starting_date;
+                        //ram.RemoveAt(target);
+                        flag = 1;
+                    }
+                    if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                    {
+                        ram[target - 1].size += ram[target].size;
+                        //ram.RemoveAt(target);
+                        flag = 1;
+                    }
+                    else
+                    {
+                        ram[target].name = "h";
+                    }
+                    if (flag == 1)
+                        ram.RemoveAt(target);
                 }
-            }
-            else if (target == (ram.Count - 1))
-            {
-                if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                chart1.Series.Clear();
+                chart1.Series.Add("h");
+                chart1.Series["h"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+                chart1.Series["h"].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
+                for (int i = 0; i < processes.Count; i++)
                 {
-                    ram[target - 1].size += ram[target].size;
-                    ram.RemoveAt(target);
+                    chart1.Series.Add(processes[i].name);
+                    chart1.Series[processes[i].name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.RangeBar;
+                    chart1.Series[processes[i].name].CustomProperties = "DrawSideBySide = False, PointWidth = 1";
                 }
-                else
+                for (int i = 0; i < ram.Count; i++)
                 {
-                    ram[target].name = "h";
+                    chart1.Series[ram[i].name].Points.AddXY(5, ram[i].starting_date + ram[i].size, ram[i].starting_date);
                 }
-            }
-            else
-            {
-                int flag = 0;
-                if (end_address == ram[target + 1].starting_date)
+                dataGridView3.Rows.Clear();
+                dataGridView3.Refresh();
+                DataTable gg = new DataTable();
+                gg.Columns.Add("Name");
+                gg.Columns.Add("size");
+                gg.Columns.Add("Address");
+                for (int i = 0; i < ram.Count; i++)
                 {
-                    ram[target + 1].size += ram[target].size;
-                    ram[target + 1].starting_date = ram[target].starting_date;
-                    //ram.RemoveAt(target);
-                    flag = 1;
+                    DataRow row = gg.NewRow();
+                    row["Name"] = ram[i].name;
+                    row["size"] = ram[i].size;
+                    row["Address"] = ram[i].starting_date;
+                    gg.Rows.Add(row);
                 }
-                if (ram[target].starting_date == (ram[target - 1].starting_date + ram[target - 1].size))
+                foreach (DataRow Drow in gg.Rows)
                 {
-                    ram[target - 1].size += ram[target].size;
-                    //ram.RemoveAt(target);
-                    flag = 1;
+                    int num = dataGridView3.Rows.Add();
+                    dataGridView3.Rows[num].Cells[0].Value = Drow["Name"].ToString();
+                    dataGridView3.Rows[num].Cells[1].Value = Drow["size"].ToString();
+                    dataGridView3.Rows[num].Cells[2].Value = Drow["Address"].ToString();
                 }
-                else
-                {
-                    ram[target].name = "h";
-                }
-                if(flag == 1)
-                    ram.RemoveAt(target);
-            }
-            holes.Clear();
-            for (int i = 0; i < ram.Count; i++)
-            {
-                if (ram[i].name == "h")
-                    holes.Add(ram[i]);
-            }
-            for (int i = 0; i < ram.Count; i++)
-            {
-                MessageBox.Show(ram[i].size.ToString(), ram[i].name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
